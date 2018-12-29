@@ -38,6 +38,7 @@ class BlackJack extends Game {
       System.out.println("Player 1 Trun");
       System.out.printf("Your cards are : ");
       p1.showCards();
+      System.out.println("The points you got : " + p1.countPoint());
       if (p1.counts == 5) {
         System.out.println("Your handcards is full. Player 2 turn!");
         turn = 2;
@@ -51,11 +52,13 @@ class BlackJack extends Game {
         } else if (Sc.equals("N"))
           turn = 2;
       }
-      p1.countPoint();
+      System.out.println("The points you got : " + p1.countPoint());
+      if(p1.countPoint() > 21) System.out.println("Your points are bigger than 21 !!!!!!!!!");
     } else if (turn == 2) { // player 2
       System.out.println("Player 2 Trun");
       System.out.println("Your cards are : ");
       p2.showCards();
+      System.out.println("The points you got : " + p2.countPoint());
       if (p2.counts == 5) {
         //// isn't finished .end game ////------------------------------------------------------------
       } else {
@@ -68,7 +71,8 @@ class BlackJack extends Game {
         } else if (Sc.equals("N"))
           ; //// isn't finished .end game ////------------------------------------------------------------
       }
-      p2.countPoint();
+      System.out.println("The points you got : " + p2.countPoint());
+      if(p2.countPoint() > 21) System.out.println("Your points are bigger than 21 !!!!!!!!!");
     }
     System.out.println("------------------------------------");
   }
@@ -76,7 +80,7 @@ class BlackJack extends Game {
   @Override
   boolean endGame() {
     // TODO Auto-generated method stub
-    if (p1.points > 21 || p2.points > 21)
+    if (p1.countPoint() > 21 || p2.countPoint() > 21)
       return true;
     return false;
   }
@@ -91,9 +95,9 @@ class BlackJack extends Game {
     System.out.printf("Player 2'cards = ");
     p2.showCards();
 
-    if (p1.points > 21) {
+    if (p1.countPoint() > 21) {
       System.out.println("The winner is Player 2 ! ");
-    } else if (p2.points > 21) {
+    } else if (p2.countPoint() > 21) {
       System.out.println("The winner is Player 1 ! ");
     }
   }
@@ -103,22 +107,22 @@ class BlackJack extends Game {
 // -------------------------------
 class PokerPlayer {
   String[] card = new String[6];
-  int points = 0;
   int counts = 0;
 
   CardCount cc = new CardCount();
 
-  void countPoint() {
+  int countPoint() {
+    int points = 0;
     for (int i = 0; i < counts; i++) {
       points += cc.CardCount(card[i]);
     }
+    return points;
   }
 
   void showCards() {
     for (int i = 0; i < counts; i++) {
       System.out.printf(card[i] + " ");
     }
-    System.out.println(points);
     System.out.printf("\n");
   }
 
