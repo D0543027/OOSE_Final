@@ -118,6 +118,7 @@ class PokerPlayer {
     for (int i = 0; i < counts; i++) {
       System.out.printf(card[i] + " ");
     }
+    System.out.println(points);
     System.out.printf("\n");
   }
 
@@ -140,8 +141,8 @@ class PokerCard {
       int n = rand.nextInt(52);
       String temp;
       temp = card[n];
-      card[n] = card[51 - n];
-      card[51 - n] = temp;
+      card[n] = card[i];
+      card[i] = temp;
     }
 
   }
