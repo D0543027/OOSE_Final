@@ -4,10 +4,7 @@ import java.util.Scanner;
 public class PokerGame {
 
   public static void main(String[] args) {
-    PokerPlayer p1 = new PokerPlayer();
-    PokerPlayer p2 = new PokerPlayer();
     BlackJack bjGame = new BlackJack();
-    bjGame.initialize();
     bjGame.playGame();
   }
 }
@@ -148,7 +145,7 @@ class PokerCard {
 
   // ¬~µP¡A¥´¶ÃµPªº¶¶§Ç
   public void cutcards() {
-    int index = 0;
+
     Random rand = new Random();
     for (int i = 0; i < 52; i++) {
       int n = rand.nextInt(52);

@@ -10,8 +10,8 @@ public class RPGGame {
 }
 
 class RPG extends Game {
-  Player p1;
-  Player p2;
+  RPGPlayer p1;
+  RPGPlayer p2;
   private int round;
   
   void attack(Card c1, Card c2) {
@@ -26,8 +26,8 @@ class RPG extends Game {
   @Override
   void initialize() {
     // TODO Auto-generated method stub
-    p1 = new Player();
-    p2 = new Player();
+    p1 = new RPGPlayer();
+    p2 = new RPGPlayer();
     round = 1;
   }
 
@@ -72,12 +72,12 @@ class RPG extends Game {
 
 }
 
-class Player {
+class RPGPlayer {
   int hp;
   Card[] handCard = new Card[10];
   int count;
 
-  public Player() {
+  public RPGPlayer() {
     hp = 20;
     for (int i = 0; i < 10; i++)
       handCard[i] = new Card();
