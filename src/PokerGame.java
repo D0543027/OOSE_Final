@@ -8,7 +8,7 @@ class BlackJack extends Game{
   @Override
   void initialize() {
     // TODO Auto-generated method stub
-    
+    int a;
   }
 
   @Override
