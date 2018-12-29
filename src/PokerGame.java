@@ -18,6 +18,7 @@ class BlackJack extends Game {
   PokerCard pcard;
   int turn = 1;
   private Scanner sc;
+  boolean end = false;
 
   @Override
   void initialize() {
@@ -60,7 +61,7 @@ class BlackJack extends Game {
       p2.showCards();
       System.out.println("The points you got : " + p2.countPoint());
       if (p2.counts == 5) {
-        //// isn't finished .end game ////------------------------------------------------------------
+        end = true;
       } else {
         System.out.println("Do you want to draw another card ? [Y/N] ");
 
@@ -69,7 +70,7 @@ class BlackJack extends Game {
           p2.card[p2.counts++] = pcard.deal();
           System.out.println("The card you drawed was : " + p2.card[p2.counts - 1]);
         } else if (Sc.equals("N"))
-          ; //// isn't finished .end game ////------------------------------------------------------------
+          end = true;
       }
       System.out.println("The points you got : " + p2.countPoint());
       if(p2.countPoint() > 21) System.out.println("Your points are bigger than 21 !!!!!!!!!");
@@ -81,6 +82,8 @@ class BlackJack extends Game {
   boolean endGame() {
     // TODO Auto-generated method stub
     if (p1.countPoint() > 21 || p2.countPoint() > 21)
+      return true;
+    if (end == true)
       return true;
     return false;
   }
@@ -95,10 +98,16 @@ class BlackJack extends Game {
     System.out.printf("Player 2'cards = ");
     p2.showCards();
 
-    if (p1.countPoint() > 21) {
+    if (p1.countPoint() > 21 ) {
       System.out.println("The winner is Player 2 ! ");
     } else if (p2.countPoint() > 21) {
       System.out.println("The winner is Player 1 ! ");
+    } else {
+      if(p1.countPoint() > p2.countPoint()) {
+        System.out.println("The winner is Player 1 ! ");
+      }else if (p2.countPoint() > p1.countPoint()) {
+        System.out.println("The winner is Player 2 ! ");
+      }
     }
   }
 
