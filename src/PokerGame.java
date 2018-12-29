@@ -31,3 +31,20 @@ class BlackJack extends Game{
  
   
 }
+//-------------------------------
+class PokerPlayer {
+  String[] card = new String[5];
+  int point;
+  
+  void drawCard() {
+    
+  }
+  
+}
+//-------------------------------
+
+
+
+
+
+
