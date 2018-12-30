@@ -4,82 +4,58 @@ import java.util.Scanner;
 public class PokerGame {
 
   public static void main(String[] args) {
+    PokerPlayer p1 = new PokerPlayer();
+    PokerPlayer p2 = new PokerPlayer();
+    PokerPlayer p3 = new PokerPlayer();
     BlackJack bjGame = new BlackJack();
+    PokerPlayer[] players = {p1,p2,p3};
+    bjGame.addPlayers(players);
     bjGame.playGame();
   }
 }
 
 class BlackJack extends Game {
-  PokerPlayer p1;
-  PokerPlayer p2;
+  PokerPlayer[] players;
   PokerCard pcard;
   int turn = 1;
+  int people = 0;
   private Scanner sc;
   boolean end = false;
 
+  void addPlayers(PokerPlayer[] p) {
+    this.players = p;
+  }
+  
   @Override
   void initialize() {
     // TODO Auto-generated method stub
-    p1 = new PokerPlayer();
-    p2 = new PokerPlayer();
     pcard = new PokerCard();
     pcard.cutcards();
-    p1.card[p1.counts++] = pcard.deal();
-    p2.card[p2.counts++] = pcard.deal();
+    for (PokerPlayer p : players ) {
+      p.card[p.counts++] = pcard.deal();
+      people++;
+    }
+    System.out.println("Game Start !  Player 1 First \n");
   }
 
   @Override
   void play() {
     // TODO Auto-generated method stub
     sc = new Scanner(System.in);
-    if (turn == 1) { // player 1
-      System.out.println("Player 1 Trun");
-      System.out.printf("Your cards are : ");
-      p1.showCards();
-      System.out.println("The points you got : " + p1.countPoint());
-      if (p1.counts == 5) {
-        System.out.println("Your handcards is full. Player 2 turn!");
-        turn = 2;
-      } else {
+    System.out.println("Player " + Integer.toString(turn) + "'s Trun");
+    showHandCards(players[turn-1]);
+    askCard(players[turn-1]);
 
-        System.out.println("Do you want to draw another card ? [Y/N] ");
-        String Sc = sc.next();
-        if (Sc.equals("Y")) {
-          p1.card[p1.counts++] = pcard.deal();
-          System.out.println("The card you drawed was : " + p1.card[p1.counts - 1]);
-        } else if (Sc.equals("N"))
-          turn = 2;
-      }
-      System.out.println("The points you got : " + p1.countPoint());
-      if(p1.countPoint() > 21) System.out.println("Your points are bigger than 21 !!!!!!!!!");
-    } else if (turn == 2) { // player 2
-      System.out.println("Player 2 Trun");
-      System.out.println("Your cards are : ");
-      p2.showCards();
-      System.out.println("The points you got : " + p2.countPoint());
-      if (p2.counts == 5) {
-        end = true;
-      } else {
-        System.out.println("Do you want to draw another card ? [Y/N] ");
-
-        String Sc = sc.next();
-        if (Sc.equals("Y")) {
-          p2.card[p2.counts++] = pcard.deal();
-          System.out.println("The card you drawed was : " + p2.card[p2.counts - 1]);
-        } else if (Sc.equals("N"))
-          end = true;
-      }
-      System.out.println("The points you got : " + p2.countPoint());
-      if(p2.countPoint() > 21) System.out.println("Your points are bigger than 21 !!!!!!!!!");
-    }
     System.out.println("------------------------------------");
   }
 
   @Override
   boolean endGame() {
     // TODO Auto-generated method stub
-    if (p1.countPoint() > 21 || p2.countPoint() > 21)
-      return true;
+    for (PokerPlayer p : players ) {
+      if (p.countPoint() > 21)
+        return true;
+    }
     if (end == true)
       return true;
     return false;
@@ -90,21 +66,43 @@ class BlackJack extends Game {
     // TODO Auto-generated method stub
     System.out.println("------------------------------------");
     System.out.println("The Game is over !");
-    System.out.printf("Player 1'cards = ");
-    p1.showCards();
-    System.out.printf("Player 2'cards = ");
-    p2.showCards();
-
-    if (p1.countPoint() > 21 ) {
-      System.out.println("The winner is Player 2 ! ");
-    } else if (p2.countPoint() > 21) {
-      System.out.println("The winner is Player 1 ! ");
-    } else {
-      if(p1.countPoint() > p2.countPoint()) {
-        System.out.println("The winner is Player 1 ! ");
-      }else if (p2.countPoint() > p1.countPoint()) {
-        System.out.println("The winner is Player 2 ! ");
+    
+    int temp = 1;
+    int winner = 0;
+    int point = 0;
+    for (PokerPlayer p : players ) {
+      System.out.printf("Player " + Integer.toString(temp) + " 'cards : ");
+      p.showCards();
+      if(p.countPoint() < 21 && p.countPoint() > point) {
+        winner = temp;
+        point = p.countPoint();
       }
+      temp++;
+    }
+    System.out.println("The winner is Player " + Integer.toString(winner) + " ! ");
+      
+  }
+
+  void showHandCards(PokerPlayer p) {
+    System.out.printf("Your cards are : ");
+    p.showCards();
+    System.out.println("The points you got : " + p.countPoint());
+  }
+
+  void askCard(PokerPlayer p) {
+    System.out.println("Do you want to draw another card ? [Y/N] ");
+    String Sc = sc.next();
+    if (Sc.equals("Y")) {
+      p.card[p.counts++] = pcard.deal();
+      System.out.println("The card you drawed was : " + p.card[p.counts - 1]);
+    } else if (Sc.equals("N")) {
+      if(turn >= people) end = true;
+      else turn++;
+    }
+    System.out.println("The points you got : " + p.countPoint());
+    if (p.countPoint() > 21) {
+      System.out.println("Your points are bigger than 21 !!!!!");
+      turn++;
     }
   }
 
@@ -114,8 +112,8 @@ class BlackJack extends Game {
 class PokerPlayer {
   String[] card = new String[6];
   int counts = 0;
-
   CardCount cc = new CardCount();
+
 
   int countPoint() {
     int points = 0;
@@ -167,7 +165,7 @@ class PokerCard {
 
 // --------------------------------
 class CardCount {
-  
+
   int CardCount(String num) {
     String word = num.substring(2);
     if (word.equals("A")) {
