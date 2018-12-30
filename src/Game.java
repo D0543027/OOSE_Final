@@ -1,6 +1,6 @@
 abstract class Game {
   
-  final void playGame(){
+  protected final void playGame(){
     
     initialize();
     while(!endGame()) {
