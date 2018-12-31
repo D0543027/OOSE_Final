@@ -112,13 +112,12 @@ class BlackJack extends Game {
 class PokerPlayer {
   String[] card = new String[6];
   int counts = 0;
-  CardCount cc = new CardCount();
-
+  PokerCard c = new PokerCard();
 
   int countPoint() {
     int points = 0;
     for (int i = 0; i < counts; i++) {
-      points += cc.CardCount(card[i]);
+      points += c.CardCount(card[i]);
     }
     return points;
   }
@@ -152,7 +151,6 @@ class PokerCard {
       card[n] = card[i];
       card[i] = temp;
     }
-
   }
 
   // 發牌,按順序發牌，從下標0開始
@@ -161,11 +159,7 @@ class PokerCard {
     index++;
     return c;
   }
-}
-
-// --------------------------------
-class CardCount {
-
+  
   int CardCount(String num) {
     String word = num.substring(2);
     if (word.equals("A")) {
