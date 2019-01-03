@@ -56,10 +56,6 @@ class BlackJack extends Game {
   @Override
   boolean endGame() {
     // TODO Auto-generated method stub
-    for (PokerPlayer p : players ) {
-      if (p.countPoint() > 21)
-        return true;
-    }
     if (end == true)
       return true;
     return false;
