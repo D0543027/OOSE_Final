@@ -164,14 +164,13 @@ class Deck{
   }
   
   public void cutcards() {
-
     Random rand = new Random();
     for (int i = 0; i < 52; i++) {
       int n = rand.nextInt(52);
       PokerCard temp;
       temp = pCard[i];
-      pCard[n] = pCard[i];
-      pCard[i] = temp;
+      pCard[i] = pCard[n];
+      pCard[n] = temp;
     }
   }
 
@@ -180,7 +179,6 @@ class Deck{
     index++;
     return c;
   }
-  
   
 }
 
