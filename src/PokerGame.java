@@ -78,7 +78,7 @@ class BlackJack extends Game {
       System.out.print("Player " + Integer.toString(temp) + " 'cards : ");
       p.showCards();
       System.out.println("Player " + Integer.toString(temp) + " 'points : " + Integer.toString(p.countPoint()));
-      if(p.countPoint() < 21 && p.countPoint() > point) {
+      if(p.countPoint() <= 21 && p.countPoint() > point) {
         winner = temp;
         point = p.countPoint();
       }
@@ -179,7 +179,6 @@ class Deck{
     }
   }
 
-  // ����,�����������0����
   public PokerCard deal() {
     PokerCard c = pCard[index];
     index++;
