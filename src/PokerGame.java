@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -11,6 +14,7 @@ public class PokerGame {
     PokerPlayer[] players = {p1,p2,p3};
     bjGame.addPlayers(players);
     bjGame.playGame();
+
   }
 }
 
@@ -21,7 +25,7 @@ class BlackJack extends Game {
   private Scanner sc;
   boolean end = false;
   
-  PokerCard pcard = PokerCard.getInstance();
+  Deck deck = Deck.getInstance();  //Singleton
   
   void addPlayers(PokerPlayer[] p) {
     this.players = p;
@@ -30,10 +34,9 @@ class BlackJack extends Game {
   @Override
   void initialize() {
     // TODO Auto-generated method stub
-    pcard = new PokerCard();
-    pcard.cutcards();
+    deck.cutcards();
     for (PokerPlayer p : players ) {
-      p.card[p.counts++] = pcard.deal();
+      p.addCard(deck.deal());
       people++;
     }
     System.out.println("Game Start !  Player 1 First \n");
@@ -46,7 +49,7 @@ class BlackJack extends Game {
     System.out.println("Player " + Integer.toString(turn) + "'s Trun");
     showHandCards(players[turn-1]);
     askCard(players[turn-1]);
-
+    
     System.out.println("------------------------------------");
   }
 
@@ -72,8 +75,9 @@ class BlackJack extends Game {
     int winner = 0;
     int point = 0;
     for (PokerPlayer p : players ) {
-      System.out.printf("Player " + Integer.toString(temp) + " 'cards : ");
+      System.out.print("Player " + Integer.toString(temp) + " 'cards : ");
       p.showCards();
+      System.out.println("Player " + Integer.toString(temp) + " 'points : " + Integer.toString(p.countPoint()));
       if(p.countPoint() < 21 && p.countPoint() > point) {
         winner = temp;
         point = p.countPoint();
@@ -94,8 +98,9 @@ class BlackJack extends Game {
     System.out.println("Do you want to draw another card ? [Y/N] ");
     String Sc = sc.next();
     if (Sc.equals("Y")) {
-      p.card[p.counts++] = pcard.deal();
-      System.out.println("The card you drawed was : " + p.card[p.counts - 1]);
+      PokerCard c = deck.deal();
+      p.addCard(c);
+      System.out.println("The card you drawed was : " + c);
     } else if (Sc.equals("N")) {
       if(turn >= people) end = true;
       else turn++;
@@ -111,76 +116,101 @@ class BlackJack extends Game {
 
 // -------------------------------
 class PokerPlayer {
-  String[] card = new String[6];
-  int counts = 0;
-  PokerCard c = new PokerCard();
+  ArrayList<PokerCard> handCard = new ArrayList<PokerCard>();
+  public PokerPlayer() {
 
-  int countPoint() {
-    int points = 0;
-    for (int i = 0; i < counts; i++) {
-      points += c.CardCount(card[i]);
-    }
-    return points;
   }
-
-  void showCards() {
-    for (int i = 0; i < counts; i++) {
-      System.out.printf(card[i] + " ");
+  
+  public void showCards() {
+    for(int i = 0; i < handCard.size(); i++) {
+      System.out.print(handCard.get(i) + " ");
     }
-    System.out.printf("\n");
+    System.out.println("");
   }
-
+  
+  public int countPoint() {
+    int sum = 0;
+    for(int i = 0; i < handCard.size(); i++) {
+      sum = sum + handCard.get(i).getPoint();
+    }
+    return sum;
+  }
+  
+  public void addCard(PokerCard pCard) {
+    handCard.add(pCard);
+  }
 }
 
-// -------------------------------
-class PokerCard {
-
-  int index = 0; // 發牌索引下標
-  String[] card = { "紅桃A", "紅桃2", "紅桃3", "紅桃4", "紅桃5", "紅桃6", "紅桃7", "紅桃8", "紅桃9", "紅桃10", "紅桃J", "紅桃Q", "紅桃K", "黑桃A",
-      "黑桃2", "黑桃3", "黑桃4", "黑桃5", "黑桃6", "黑桃7", "黑桃8", "黑桃9", "黑桃10", "黑桃J", "黑桃Q", "黑桃K", "梅花A", "梅花2", "梅花3", "梅花4",
-      "梅花5", "梅花6", "梅花7", "梅花8", "梅花9", "梅花10", "梅花J", "梅花Q", "梅花K", "方塊A", "方塊2", "方塊3", "方塊4", "方塊5", "方塊6", "方塊7",
-      "方塊8", "方塊9", "方塊10", "方塊J", "方塊Q", "方塊K", };
-
-  private static PokerCard uniqueInstance;
+class Deck{
+  private static Deck uniqueInstance;
+  private PokerCard[] pCard = new PokerCard[52];
+  private int index;
   
-  public static PokerCard getInstance() {
+  public static Deck getInstance() {
     if(uniqueInstance == null) {
-      uniqueInstance = new PokerCard();
+      uniqueInstance = new Deck();
     }
-    
     return uniqueInstance;
   }
+  private Deck() {
+    index = 0;
+    String[] type = { "Spades", "Clubs", "Diamonds", "Hearts" };
+    int count = 0;
+    for (String s : type) {
+      for (int n = 2; n <= 10; n++) {
+        pCard[count++] = new PokerCard(s, Integer.toString(n));
+      }
+      pCard[count++] = new PokerCard(s,"A");
+      pCard[count++] = new PokerCard(s,"J");
+      pCard[count++] = new PokerCard(s,"Q");
+      pCard[count++] = new PokerCard(s,"K");
+    }
+  }
   
-  // 洗牌，打亂牌的順序
   public void cutcards() {
 
     Random rand = new Random();
     for (int i = 0; i < 52; i++) {
       int n = rand.nextInt(52);
-      String temp;
-      temp = card[n];
-      card[n] = card[i];
-      card[i] = temp;
+      PokerCard temp;
+      temp = pCard[i];
+      pCard[n] = pCard[i];
+      pCard[i] = temp;
     }
   }
 
-  // 發牌,按順序發牌，從下標0開始
-  public String deal() {
-    String c = card[index];
+  // ����,�����������0����
+  public PokerCard deal() {
+    PokerCard c = pCard[index];
     index++;
     return c;
   }
   
-  int CardCount(String num) {
-    String word = num.substring(2);
-    if (word.equals("A")) {
+  
+}
+
+// -------------------------------
+class PokerCard {
+  String type;
+  String number;
+
+  public PokerCard(String type, String number) {
+    this.type = type;
+    this.number = number;
+  }
+  
+  public String toString() {
+    return type+number;
+  }
+  
+  public int getPoint() {
+    if (number.equals("A")) {
       return 1;
-    } else if (num.substring(2).equals("J") || num.substring(2).equals("Q") || num.substring(2).equals("K")
-        || num.substring(2).equals("10")) {
+    } else if (number.equals("J") || number.equals("Q") || number.equals("K")
+        || number.equals("10")) {
       return 10;
     } else {
-      int n = (int) num.substring(2).charAt(0) - 48;
-      return n;
+      return Integer.parseInt(number);
     }
   }
 }
