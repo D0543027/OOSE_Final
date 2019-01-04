@@ -56,6 +56,8 @@ class BlackJack extends Game {
   @Override
   boolean endGame() {
     // TODO Auto-generated method stub
+    if (turn > people)
+      return true;
     if (end == true)
       return true;
     return false;
