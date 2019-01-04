@@ -8,20 +8,40 @@ public class TCGGame {
 
   public static void main(String[] args) {
     // TODO Auto-generated method stub
-    TCG tcg = new TCG();
+    /*
+    HumanPlayer p1 = new HumanPlayer();
+    comPlayer p2 = new comPlayer();
+    TCG tcg = new TCG(p1,p2);
     tcg.playGame();
+    */
+    
+    /*
+    HumanPlayer p3 = new HumanPlayer();
+    HumanPlayer p4 = new HumanPlayer();
+    TCG tcg1 = new TCG(p3,p4);
+    tcg1.playGame();
+    */
+    
+    comPlayer p5 = new comPlayer();
+    comPlayer p6 = new comPlayer();
+    TCG tcg2 = new TCG(p5,p6);
+    tcg2.playGame();
   }
 }
 
 class TCG extends Game {
-  private HumanPlayer p1;
-  private comPlayer p2;
+  private TCGPlayer p1;
+  private TCGPlayer p2;
   private int round;
+  
+  public TCG(TCGPlayer p1, TCGPlayer p2) {
+    this.p1 = p1;
+    this.p2 = p2;
+  }
 
   void initialize() {
     // TODO Auto-generated method stub
-    p1 = new HumanPlayer();
-    p2 = new comPlayer();
+    System.out.println("Trading Card Game Start !!!!");
     round = 1;
   }
 
@@ -29,16 +49,19 @@ class TCG extends Game {
     // TODO Auto-generated method stub
     TCGCard card1;
     TCGCard card2;
+    
     System.out.println("Round " + Integer.toString(round) + " :");
     p1.drawCard();
     p2.drawCard();
     
+    System.out.println("p1 : ");
     p1.ShowHandCard();
-
     card1 = p1.playCard();
-
+    
+    System.out.println("p2 : ");
+    p2.ShowHandCard();
     card2 = p2.playCard();
-
+    
     attack(card1, card2);
 
     System.out.println("p1`hp = " + Integer.toString(p1.hp));
@@ -98,21 +121,10 @@ class HumanPlayer extends TCGPlayer {
     super();
   }
   
-  public void ShowHandCard() {
-    System.out.print("HandCard : ");
-    Iterator hiter = HandCard.iterator();
-    while(hiter.hasNext()) {
-      System.out.print(hiter.next());
-    }
-    System.out.println("");
-  }
- 
-
   public TCGCard playCard() {
     System.out.print("choose the card you want play: ");
     int cardSeq = sc.nextInt();
     TCGCard c = HandCard.get(cardSeq - 1);
-    c.CardInfo();
     HandCard.remove(cardSeq - 1);
     return c;
   }
@@ -127,11 +139,14 @@ class comPlayer extends TCGPlayer{
   }
 
   public TCGCard playCard() {
-    TCGCard c = HandCard.get(0);
-    HandCard.remove(0);
+    Random rand = new Random();
+    int r = rand.nextInt(HandCard.size());
+    TCGCard c = HandCard.get(r);
+    HandCard.remove(r);
     return c;
     
   }
+
 
 }
 
@@ -162,6 +177,15 @@ abstract class TCGPlayer {
     if (diter.hasNext()) {
       HandCard.add(diter.next());
     }
+  }
+
+  public void ShowHandCard() {
+    System.out.print("HandCard : ");
+    Iterator hiter = HandCard.iterator();
+    while(hiter.hasNext()) {
+      System.out.print(hiter.next());
+    }
+    System.out.println("");
   }
 
   abstract TCGCard playCard();
