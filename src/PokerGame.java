@@ -46,7 +46,7 @@ class BlackJack extends Game {
   void play() {
     // TODO Auto-generated method stub
     sc = new Scanner(System.in);
-    System.out.println("Player " + Integer.toString(turn) + "'s Trun");
+    System.out.println("Player " + Integer.toString(turn) + "'s Turn");
     showHandCards(players[turn - 1]); 
     askCard(players[turn - 1]); 
 
