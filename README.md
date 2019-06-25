@@ -1,3 +1,3 @@
 # OOSE_Final
 
-using Design Pattern: Iterator, Singleton, Template Method
+Using design pattern: Iterator, Singleton, Template Method
